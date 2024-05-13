@@ -8,7 +8,7 @@ const uploadFilePath = path.resolve(__dirname, '../..', 'public/uploads');
 const storageFile: multer.StorageEngine = multer.diskStorage({
   destination: uploadFilePath,
   filename(req: Express.Request, file: Express.Multer.File, fn: (error: Error | null, filename: string) => void): void {
-    fn(null, `${new Date().getTime().toString()}-${uuidv4()}${path.extname(file.originalname)}`);
+    fn(null, `${file.originalname}`);
   },
 });
 
