@@ -6,7 +6,11 @@ import { v4 as uuidv4 } from 'uuid';
 const uploadFilePath = path.resolve(__dirname, '../..', 'public/uploads');
 
 const storageFile: multer.StorageEngine = multer.diskStorage({
-  destination: uploadFilePath,
+  destination:  (req, file, cb) => {
+    // Define your dynamic destination folder here based on request parameters
+    const destinationFolder = path.resolve(__dirname, '..', 'public/uploads', req.params.folderName);
+    cb(null, destinationFolder);
+  },
   filename(req: Express.Request, file: Express.Multer.File, fn: (error: Error | null, filename: string) => void): void {
     fn(null, `${file.originalname}`);
   },
