@@ -12,7 +12,7 @@ const getFirstAndLastPart = (str) => {
   return [firstPart, lastPart];
 };
 
-appRoute.post('/upload', async (req, res) => {
+appRoute.post('/files-manager/upload', async (req, res) => {
   let uploadResult;
   try {
     uploadResult = await handleSingleUploadFile(req, res);
@@ -22,7 +22,7 @@ appRoute.post('/upload', async (req, res) => {
   return res.json({ data: uploadResult });
 });
 
-appRoute.get('/view-file', async (req, res) => {
+appRoute.get('/files-manager/view-file', async (req, res) => {
   const { file, folder } = req.query as { file: string; folder: string;  };
   const result = getFirstAndLastPart(file);
   try {
@@ -33,7 +33,7 @@ appRoute.get('/view-file', async (req, res) => {
   }
 });
 
-appRoute.delete('/delete-file', async (req, res) => {
+appRoute.delete('/files-manager/delete-file', async (req, res) => {
   const { file } = req.query as { file: string;  };
   const result = getFirstAndLastPart(file);
   try {
