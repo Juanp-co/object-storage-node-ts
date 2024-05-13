@@ -1,43 +1,22 @@
 import * as path from 'path';
 import { Request, Response } from 'express';
-import multer from 'multer';
-import { v4 as uuidv4 } from 'uuid';
-
-const uploadFilePath = path.resolve(__dirname, '../..', 'public/uploads');
-
-const storageFile: multer.StorageEngine = multer.diskStorage({
-  destination:  (req, file, cb) => {
-    // Define your dynamic destination folder here based on request parameters
-    const destinationFolder = path.resolve(__dirname, '..', 'public/uploads', req.params.folderName);
-    cb(null, destinationFolder);
-  },
-  filename(req: Express.Request, file: Express.Multer.File, fn: (error: Error | null, filename: string) => void): void {
-    fn(null, `${file.originalname}`);
-  },
-});
-
-const uploadFile = multer({
-  storage: storageFile,
-  limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter(req, file, callback) {
-    const extension: boolean = ['.png', '.jpg', '.jpeg'].indexOf(path.extname(file.originalname).toLowerCase()) >= 0;
-    const mimeType: boolean = ['image/png', 'image/jpg', 'image/jpeg'].indexOf(file.mimetype) >= 0;
-
-    if (extension && mimeType) {
-      return callback(null, true);
-    }
-    callback(new Error('Invalid file type. Only picture file on type PNG and JPG are allowed!'));
-  },
-}).single('picture');
+import fs from 'fs';
 
 const handleSingleUploadFile = async (req: Request, res: Response): Promise<any> => {
-  return new Promise((resolve, reject): void => {
-    uploadFile(req, res, (error) => {
-      if (error) {
-        reject(error);
-      }
-      resolve({ file: req.file });
-    });
+  
+  return new Promise(async (resolve, reject) => {
+    const base64Data = req.body.base64Data;
+    const buffer = Buffer.from(base64Data, 'base64');
+    const filePath = path.join(__dirname, '../../public', req.body.folderName);
+    if (!fs.existsSync(filePath)) {
+      fs.mkdirSync(filePath, { recursive: true });
+    }
+    try {
+      await fs.promises.writeFile(`${filePath}/${req.body.fileName}`, buffer );
+      resolve({ file: 'req.file '});
+    } catch (error) {
+      reject(error);
+    }
   });
 };
 

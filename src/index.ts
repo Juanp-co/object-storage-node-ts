@@ -9,10 +9,9 @@ const HOST = process.env.HOST || 'http://localhost';
 const PORT = parseInt(process.env.PORT || '4500');
 
 const app = express();
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
+app.use(express.json({ limit: '25mb' }));
+app.use(express.urlencoded({ extended: true, limit: '25mb' }));
+app.use(express.static('public'));
 app.get('/', (req, res) => {
   return res.json({ message: 'Hello World!' });
 });

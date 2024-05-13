@@ -1,9 +1,16 @@
 import { Router } from 'express';
-import path from 'path';
+import * as path from 'path';
 import fs from 'fs';
 import { handleSingleUploadFile } from '../utils/uploadSingle';
 
 const appRoute = Router();
+
+const getFirstAndLastPart = (str) => {
+  const lastSlashIndex = str.lastIndexOf('/');
+  const firstPart = str.substring(0, lastSlashIndex);
+  const lastPart = str.substring(lastSlashIndex + 1);
+  return [firstPart, lastPart];
+};
 
 appRoute.post('/upload', async (req, res) => {
   let uploadResult;
@@ -16,9 +23,10 @@ appRoute.post('/upload', async (req, res) => {
 });
 
 appRoute.get('/view-file', async (req, res) => {
-  const { file  } = req.query as { file: string; };
+  const { file, folder } = req.query as { file: string; folder: string;  };
+  const result = getFirstAndLastPart(file);
   try {
-    const filePath = path.resolve(__dirname, '../../public/uploads', file);
+    const filePath = path.join(__dirname, '../../public', result[0], result[1]);
     return res.sendFile(filePath);
   } catch (err) {
     return res.status(400).json({ message: err });
@@ -26,9 +34,10 @@ appRoute.get('/view-file', async (req, res) => {
 });
 
 appRoute.delete('/delete-file', async (req, res) => {
-  const { file } = req.query as { file: string; };
+  const { file } = req.query as { file: string;  };
+  const result = getFirstAndLastPart(file);
   try {
-    const filePath = path.resolve(__dirname, '../../public/uploads', file);
+    const filePath = path.join(__dirname, '../../public', result[0], result[1]);
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
       return res.json({ message: 'File deleted successfully' });
