@@ -62,7 +62,7 @@ var app = (0, express_1.default)();
 app.use(express_1.default.json({ limit: '25mb' }));
 app.use(express_1.default.urlencoded({ extended: true, limit: '25mb' }));
 app.use(express_1.default.static('public'));
-app.use('/*', _404Router);
+// app.use('/*', _404Router);
 app.get('/', function (req, res) {
     return res.json({ message: 'Hello World!' });
 });

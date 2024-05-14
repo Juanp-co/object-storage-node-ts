@@ -24,7 +24,7 @@ const app = express();
 app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 app.use(express.static('public'));
-app.use('/*', _404Router);
+// app.use('/*', _404Router);
 app.get('/', (req, res) => {
   return res.json({ message: 'Hello World!' });
 });
