@@ -62,12 +62,12 @@ var app = (0, express_1.default)();
 app.use(express_1.default.json({ limit: '25mb' }));
 app.use(express_1.default.urlencoded({ extended: true, limit: '25mb' }));
 app.use(express_1.default.static('public'));
-// app.use('/*', _404Router);
 app.get('/', function (req, res) {
     return res.json({ message: 'Hello World!' });
 });
 app.use('/', appRoute_1.appRoute);
 app.use(express_1.default.static(path_1.default.join(__dirname, '../public')));
+app.use('/*', _404Router);
 app.listen(PORT, function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         console.log("Application started on URL ".concat(HOST, ":").concat(PORT, " \uD83C\uDF89"));

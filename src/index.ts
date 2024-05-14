@@ -24,14 +24,13 @@ const app = express();
 app.use(express.json({ limit: '25mb' }));
 app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 app.use(express.static('public'));
-// app.use('/*', _404Router);
 app.get('/', (req, res) => {
   return res.json({ message: 'Hello World!' });
 });
 
 app.use('/', appRoute);
-
 app.use(express.static(path.join(__dirname, '../public')));
+app.use('/*', _404Router);
 
 app.listen(PORT, async () => {
   console.log(`Application started on URL ${HOST}:${PORT} 🎉`);
